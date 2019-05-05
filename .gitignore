@@ -1,0 +1,5 @@
+.idea/
+vendor/
+coverage.out
+glide.lock
+validation.coverprofile
