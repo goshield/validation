@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"errors"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -13,6 +14,9 @@ func (f *sampleDatabaseFetcher) FetchOne(table string, conditions map[string]int
 	}
 	if table == "sample_3" {
 		return false, nil
+	}
+	if table == "sample_4" {
+		return nil, errors.New("some error")
 	}
 
 	return nil, nil
@@ -38,6 +42,10 @@ type sampleUniqueInput4 struct {
 	Email string `validate:"unique=sample_3,email"`
 }
 
+type sampleUniqueInput5 struct {
+	Email string `validate:"unique=sample_4,email"`
+}
+
 var _ = Describe("UniqueChecker", func() {
 	It("should return error code ERR_VALIDATOR_INVALID_ARGUMENT", func() {
 		err := getUniqueValidator().Validate(sampleUniqueInput1{"e@mail.com"})
@@ -60,5 +68,11 @@ var _ = Describe("UniqueChecker", func() {
 		err := getUniqueValidator().Validate(sampleUniqueInput4{"e@mail.com"})
 		Expect(err).NotTo(BeNil())
 		Expect(err.Error()).To(Equal(NotUniqueValueError))
+	})
+
+	It("should return error code UnableToFetchResourceError", func() {
+		err := getUniqueValidator().Validate(sampleUniqueInput5{"e@mail.com"})
+		Expect(err).NotTo(BeNil())
+		Expect(err.Error()).To(Equal(UnableToFetchResourceError))
 	})
 })

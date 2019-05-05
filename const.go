@@ -22,6 +22,6 @@ const (
 	NotInRangeError            = "value must be between %v and %v"
 	InvalidRegexPatternError   = "%v is not a valid pattern"
 	RegexValueError            = "value does not match %v"
-	UnableToFetchResourceError = "unable to fetch appropriate resource for %s"
+	UnableToFetchResourceError = "unable to fetch appropriate resource"
 	NotUniqueValueError        = "value already exists. It must be unique"
 )

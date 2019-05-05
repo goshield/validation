@@ -70,6 +70,10 @@ var _ = Describe("Validator", func() {
 	It("should return an instance of Validator", func() {
 		Expect(New()).NotTo(BeNil())
 	})
+
+	It("should return an instance of Validator with custom tag", func() {
+		Expect(NewWithTag("my_tag")).NotTo(BeNil())
+	})
 })
 var _ = Describe("factoryValidator", func() {
 	It("[private] should parse tags", func() {
@@ -142,5 +146,20 @@ var _ = Describe("factoryValidator", func() {
 		}
 		err := v.Validate(sampleValidatorInput4{"hello"})
 		Expect(err).To(BeNil())
+	})
+
+	It("should return parse tags in negative case", func() {
+		v := &factoryValidator{}
+		tags := v.parseTags("min=2,max=3")
+		Expect(len(tags)).To(Equal(2))
+
+		tags = v.parseTags("")
+		Expect(len(tags)).To(Equal(0))
+	})
+
+	It("should return error if valueOf of wrong type", func() {
+		v := &factoryValidator{}
+		_, err := v.valueOf("a string")
+		Expect(err).NotTo(BeNil())
 	})
 })

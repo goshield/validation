@@ -16,4 +16,9 @@ var _ = Describe("Is", func() {
 		err := IsNil(nil)
 		Expect(err).To(BeNil())
 	})
+
+	It("IsEmpty should return true/false", func() {
+		Expect(IsEmpty("")).To(BeTrue())
+		Expect(IsEmpty("some string")).To(BeFalse())
+	})
 })

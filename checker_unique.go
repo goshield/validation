@@ -2,8 +2,6 @@ package validation
 
 import (
 	"errors"
-	"fmt"
-
 	"strings"
 )
 
@@ -36,7 +34,7 @@ func (c *uniqueChecker) Check(v interface{}, expects string) error {
 	conditions[column] = v
 	row, err := c.fetcher.FetchOne(table, conditions)
 	if err != nil {
-		return errors.New(fmt.Sprintf(UnableToFetchResourceError, v))
+		return errors.New(UnableToFetchResourceError)
 	}
 	if row != nil {
 		return errors.New(NotUniqueValueError)
