@@ -4,15 +4,17 @@ const (
 	// Common
 	True  = "true"
 	False = "false"
+	Empty = ""
 
 	// Validator errors
-	InvalidTypeError     = "%s type is not supported"
-	InvalidArgumentError = "invalid argument found"
-	NotIntegerValueError = "value is not an integer number"
-	NotFloatValueError   = "value is not a float number"
-	NotNumberValueError  = "value is not a number"
-	NotNilValueError     = "value is not nil"
-	NotStringValueError  = "value is not a string"
+	InvalidTypeError          = "%s type is not supported"
+	InvalidArgumentError      = "invalid argument found"
+	NotIntegerValueError      = "value is not an integer number"
+	NotFloatValueError        = "value is not a float number"
+	NotNumberValueError       = "value is not a number"
+	NotStringNumberValueError = "value (string) is not a number"
+	NotNilValueError          = "value is not nil"
+	NotStringValueError       = "value is not a string"
 
 	// Checkers errors
 	InvalidEmailFormatError    = "value is not an email address"

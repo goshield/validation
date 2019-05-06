@@ -17,7 +17,7 @@ func IsString(v interface{}) (string, error) {
 
 func IsInt(v interface{}) (int64, error) {
 	t := reflect.TypeOf(v)
-	if t.Kind() != reflect.Int64 {
+	if t.Kind() != reflect.Int64 && t.Kind() != reflect.Int {
 		return 0, errors.New(NotIntegerValueError)
 	}
 
@@ -53,12 +53,35 @@ func IsStringFloat(s string) (float64, error) {
 
 func IsNumber(v interface{}) error {
 	_, isF := IsFloat(v)
-	_, isI := IsInt(v)
-	if isF != nil && isI != nil {
-		return errors.New(NotNumberValueError)
+	if isF == nil {
+		return nil
 	}
 
-	return nil
+	_, isI := IsInt(v)
+	if isI == nil {
+		return nil
+	}
+
+	return errors.New(NotNumberValueError)
+}
+
+func IsStringNumber(v interface{}) error {
+	s, err := IsString(v)
+	if err != nil {
+		return errors.New(NotStringNumberValueError)
+	}
+
+	_, isSF := IsStringFloat(s)
+	if isSF == nil {
+		return nil
+	}
+
+	_, isSI := IsStringInt(s)
+	if isSI != nil {
+		return nil
+	}
+
+	return errors.New(NotStringNumberValueError)
 }
 
 func IsNil(v interface{}) error {
@@ -70,5 +93,5 @@ func IsNil(v interface{}) error {
 }
 
 func IsEmpty(v string) bool {
-	return v == ""
+	return v == Empty
 }

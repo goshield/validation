@@ -63,7 +63,12 @@ type sampleValidatorInput6 struct {
 }
 
 type sampleValidatorInput7 struct {
-	A int `validate:"min=3" error:"A must be lower than 3"`
+	A int `validate:"max=3" error:"A must be lower than 3"`
+}
+
+type sampleValidatorInput8 struct {
+	A string `validate:"empty=false"`
+	B sampleValidatorInput7
 }
 
 var _ = Describe("Validator", func() {
@@ -128,7 +133,7 @@ var _ = Describe("factoryValidator", func() {
 	It("should allow to set custom error message", func() {
 		v := New()
 
-		err := v.Validate(sampleValidatorInput7{A: 2})
+		err := v.Validate(sampleValidatorInput7{A: 10})
 		Expect(err).NotTo(BeNil())
 		Expect(err.Error()).To(Equal("A must be lower than 3"))
 	})
@@ -161,5 +166,15 @@ var _ = Describe("factoryValidator", func() {
 		v := &factoryValidator{}
 		_, err := v.valueOf("a string")
 		Expect(err).NotTo(BeNil())
+	})
+
+	It("should test multiple levels", func() {
+		v := New()
+		err := v.Validate(sampleValidatorInput8{
+			A: "OK",
+			B: sampleValidatorInput7{A: 4},
+		})
+		Expect(err).NotTo(BeNil())
+		Expect(err.Error()).To(Equal("A must be lower than 3"))
 	})
 })
