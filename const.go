@@ -1,6 +1,10 @@
 package validation
 
 const (
+	// Common
+	True  = "true"
+	False = "false"
+
 	// Validator errors
 	InvalidTypeError     = "%s type is not supported"
 	InvalidArgumentError = "invalid argument found"
@@ -24,4 +28,5 @@ const (
 	RegexValueError            = "value does not match %v"
 	UnableToFetchResourceError = "unable to fetch appropriate resource"
 	NotUniqueValueError        = "value already exists. It must be unique"
+	EmptyValueError            = "value must not be empty"
 )

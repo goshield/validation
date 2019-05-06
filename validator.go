@@ -44,7 +44,8 @@ func initializeCheckers(v Validator) Validator {
 		Extend(RangeChecker()).
 		Extend(EmailChecker()).
 		Extend(RegExpChecker()).
-		Extend(InChecker())
+		Extend(InChecker()).
+		Extend(EmptyChecker())
 }
 
 type factoryValidator struct {
