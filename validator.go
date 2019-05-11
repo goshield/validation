@@ -16,13 +16,7 @@ type Validator interface {
 }
 
 func New() Validator {
-	v := &factoryValidator{
-		tag:      "validate",
-		errorTag: "error",
-		checkers: make(map[string]Checker),
-	}
-
-	return initializeCheckers(v)
+	return NewWithTag("validate")
 }
 
 // NewWithTag allows to create validator with custom tag rather than "validate"

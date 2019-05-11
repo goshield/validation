@@ -71,6 +71,18 @@ Hence, result would be
 Age must be higher than 13
 ```
 
+### Customize Validation Tag
+
+Validation uses tag `validate` as default tag, nonetheless, you could change 
+to something in case this tag already been used.
+
+```
+type Person struct {
+	Age int64 `my_tag:"range=18-60"`
+}
+v := validation.NewWithTag("my_tag")
+```            
+
 ### Internal Checkers
 
 - `EmailChecker` helps to validate if a string is an email address, accepts `string`

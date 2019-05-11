@@ -45,7 +45,7 @@ type sampleValidatorInput2 struct {
 }
 
 type sampleValidatorInput3 struct {
-	Y string `validate:"#$%%@"`
+	Y int `my_tag:"min=3"`
 }
 
 type sampleValidatorInput4 struct {
@@ -109,6 +109,11 @@ var _ = Describe("factoryValidator", func() {
 
 	It("should ignore when no validation rules found", func() {
 		err := New().Validate(emptyValidatorInput{})
+		Expect(err).To(BeNil())
+	})
+
+	It("should validate with custom tag", func() {
+		err := NewWithTag("my_tag").Validate(sampleValidatorInput3{Y: 3})
 		Expect(err).To(BeNil())
 	})
 
