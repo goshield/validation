@@ -48,6 +48,29 @@ You could extend validator as much as possible via `Checker`
 validator.Extend(&MyCustomChecker{})
 ```
 
+### Customize Error Message
+
+Validator ships default error's message for each checker, it is a simple message. 
+However, in some cases you might want to customize your own message which becomes 
+more meaning to your customers, you could do as following
+
+```
+type Person struct {
+	Age int `validate:"min=13" error:"Age must be higher than 13"`
+}
+
+func main() {
+	v := validation.New()
+	fmt.Println(v.Validate(Person{Age: 12}))
+}
+``` 
+
+Hence, result would be
+
+```
+Age must be higher than 13
+```
+
 ### Internal Checkers
 
 - `EmailChecker` helps to validate if a string is an email address, accepts `string`
