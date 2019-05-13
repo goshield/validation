@@ -127,6 +127,13 @@ type User struct {
 }
 ```
 
+- `LengthChecker` helps to validate if a string has length equals value, accepts `string`
+```
+type User struct {
+	Password string `validate:"length=8"`
+}
+```
+
 - `RangeChecker` helps to validate if a value is in a range, accepts `int64`, `float64`
 ```
 type User struct {

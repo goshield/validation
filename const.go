@@ -22,6 +22,7 @@ const (
 	ItemNotFoundInListError    = "%v is not appeared in %v"
 	MaxValueError              = "maximum value is %v"
 	MaxLengthValueError        = "maximum length is %v"
+	LengthValueError           = "length must be %v"
 	MinValueError              = "minimum value is %v"
 	MinLengthValueError        = "minimum length is %v"
 	InvalidRangeFormatError    = "invalid range format"

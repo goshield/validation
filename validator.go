@@ -39,7 +39,8 @@ func initializeCheckers(v Validator) Validator {
 		Extend(EmailChecker()).
 		Extend(RegExpChecker()).
 		Extend(InChecker()).
-		Extend(EmptyChecker())
+		Extend(EmptyChecker()).
+		Extend(LengthChecker())
 }
 
 func makeError(name string, err string) error {
