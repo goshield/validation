@@ -27,19 +27,19 @@ var _ = Describe("RegExpChecker", func() {
 	It("should return error code ERR_VALIDATOR_REGEXP_WRONG_PATTERN", func() {
 		err := New().Validate(sampleRegexpInputTest1{10})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(InvalidRegexPatternError, "**")))
+		Expect(err).To(Equal(makeError("Age", fmt.Sprintf(InvalidRegexPatternError, "**"))))
 	})
 
 	It("should return error code ERR_VALIDATOR_REGEXP_NOT_MATCH", func() {
 		err := New().Validate(sampleRegexpInputTest2{"j@hn"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(RegexValueError, "^[a-z0-9]+$")))
+		Expect(err).To(Equal(makeError("Name", fmt.Sprintf(RegexValueError, "^[a-z0-9]+$"))))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_STRING", func() {
 		err := New().Validate(sampleRegexpInputTest3{10})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotStringValueError))
+		Expect(err).To(Equal(makeError("Age", NotStringValueError)))
 	})
 
 	It("should return nil", func() {

@@ -27,19 +27,19 @@ var _ = Describe("MinLengthChecker", func() {
 	It("should return error code ERR_VALIDATOR_NOT_STRING", func() {
 		err := New().Validate(sampleMinLengthInput1{10})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotStringValueError))
+		Expect(err).To(Equal(makeError("Username", NotStringValueError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_INT", func() {
 		err := New().Validate(sampleMinLengthInput2{"aa"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotIntegerValueError))
+		Expect(err).To(Equal(makeError("Username", NotIntegerValueError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_MIN_LENGTH", func() {
 		err := New().Validate(sampleMinLengthInput3{"aa"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(MinLengthValueError, 3)))
+		Expect(err).To(Equal(makeError("Username", fmt.Sprintf(MinLengthValueError, 3))))
 	})
 
 	It("should return nil", func() {

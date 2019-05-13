@@ -6,7 +6,7 @@ func EmptyChecker() Checker {
 	return &emptyChecker{}
 }
 
-type emptyChecker struct {}
+type emptyChecker struct{}
 
 func (c *emptyChecker) Name() string {
 	return "empty"
@@ -19,5 +19,3 @@ func (c *emptyChecker) Check(v interface{}, expects string) error {
 
 	return nil
 }
-
-

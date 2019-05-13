@@ -13,7 +13,7 @@ var _ = Describe("EmptyChecker", func() {
 	It("should return error code EmptyValueError", func() {
 		err := New().Validate(sampleEmptyInputTest1{})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(EmptyValueError))
+		Expect(err).To(Equal(makeError("Name", EmptyValueError)))
 	})
 
 	It("should return nil", func() {

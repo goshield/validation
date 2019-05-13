@@ -36,25 +36,25 @@ var _ = Describe("InChecker", func() {
 	It("should return error code EmptyListFoundError", func() {
 		err := New().Validate(sampleInInput1{10})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(EmptyListFoundError, 10)))
+		Expect(err).To(Equal(makeError("Age", fmt.Sprintf(EmptyListFoundError, 10))))
 	})
 
 	It("should return error code ItemNotFoundInListError (int)", func() {
 		err := New().Validate(sampleInInput3{7})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(ItemNotFoundInListError, 7, "[1 5]")))
+		Expect(err).To(Equal(makeError("Age", fmt.Sprintf(ItemNotFoundInListError, 7, "[1 5]"))))
 	})
 
 	It("should return error code ItemNotFoundInListError (float)", func() {
 		err := New().Validate(sampleInInput4{7.3})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(ItemNotFoundInListError, 7.3, "[1.2 5.6]")))
+		Expect(err).To(Equal(makeError("Age", fmt.Sprintf(ItemNotFoundInListError, 7.3, "[1.2 5.6]"))))
 	})
 
 	It("should return error code ItemNotFoundInListError (string)", func() {
 		err := New().Validate(sampleInInput5{"medium"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(ItemNotFoundInListError, "medium", "[young old]")))
+		Expect(err).To(Equal(makeError("Age", fmt.Sprintf(ItemNotFoundInListError, "medium", "[young old]"))))
 	})
 
 	It("should return nil", func() {

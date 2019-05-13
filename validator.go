@@ -42,6 +42,10 @@ func initializeCheckers(v Validator) Validator {
 		Extend(EmptyChecker())
 }
 
+func makeError(name string, err string) error {
+	return errors.New(fmt.Sprintf("%s: %s", name, err))
+}
+
 type factoryValidator struct {
 	tag      string
 	errorTag string
@@ -94,7 +98,7 @@ func (v *factoryValidator) Validate(input interface{}) error {
 				if !IsEmpty(errMsg) {
 					return errors.New(errMsg)
 				}
-				return err
+				return makeError(sf.Name, err.Error())
 			}
 		}
 	}

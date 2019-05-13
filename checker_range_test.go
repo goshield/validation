@@ -35,35 +35,35 @@ type sampleRangeInputTest7 struct {
 	Age float64 `validate:"range=10.0-10.2"`
 }
 
-var _ = Describe("MinLengthChecker", func() {
+var _ = Describe("RangeChecker", func() {
 	It("should return error code ERR_VALIDATOR_NOT_NUMBER", func() {
 		err := New().Validate(sampleRangeInputTest1{"10"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotNumberValueError))
+		Expect(err).To(Equal(makeError("Age", NotNumberValueError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_INVALID_FORMAT", func() {
 		err := New().Validate(sampleRangeInputTest2{10})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(InvalidRangeFormatError))
+		Expect(err).To(Equal(makeError("Age", InvalidRangeFormatError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_IN_RANGE", func() {
 		err := New().Validate(sampleRangeInputTest3{10})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(NotInRangeError, 18, 60)))
+		Expect(err).To(Equal(makeError("Age", fmt.Sprintf(NotInRangeError, 18, 60))))
 	})
 
 	It("should return error code ERR_VALIDATOR_INVALID_FORMAT (float)", func() {
 		err := New().Validate(sampleRangeInputTest4{10.2})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(InvalidRangeFormatError))
+		Expect(err).To(Equal(makeError("Age", InvalidRangeFormatError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_IN_RANGE (float)", func() {
 		err := New().Validate(sampleRangeInputTest5{9.9})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(NotInRangeError, 10.0, 10.2)))
+		Expect(err).To(Equal(makeError("Age", fmt.Sprintf(NotInRangeError, 10.0, 10.2))))
 	})
 
 	It("should return nil (int)", func() {

@@ -17,7 +17,7 @@ var _ = Describe("EmailChecker", func() {
 	It("should return error code ERR_VALIDATOR_NOT_STRING", func() {
 		err := New().Validate(sampleEmailInputTest1{5})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotStringValueError))
+		Expect(err).To(Equal(makeError("Email", NotStringValueError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_EMAIL", func() {
@@ -29,7 +29,7 @@ var _ = Describe("EmailChecker", func() {
 		for _, email := range cases {
 			err := New().Validate(sampleEmailInputTest2{email})
 			Expect(err).NotTo(BeNil())
-			Expect(err.Error()).To(Equal(InvalidEmailFormatError))
+			Expect(err).To(Equal(makeError("Email", InvalidEmailFormatError)))
 		}
 	})
 

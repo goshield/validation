@@ -43,17 +43,17 @@ var _ = Describe("MinChecker", func() {
 	It("should return error code ERR_VALIDATOR_NOT_NUMBER", func() {
 		err := New().Validate(&sampleMinInputTest1{Age: 10})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotNumberValueError))
+		Expect(err).To(Equal(makeError("Age", NotNumberValueError)))
 
 		err = New().Validate(&sampleMinInputTest2{Age: "10"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotNumberValueError))
+		Expect(err).To(Equal(makeError("Age", NotNumberValueError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_MIN (int)", func() {
 		err := New().Validate(&sampleMinInputTest3{Age: 9})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(MinValueError, 10)))
+		Expect(err).To(Equal(makeError("Age", fmt.Sprintf(MinValueError, 10))))
 	})
 
 	It("should return nil (float)", func() {
@@ -69,18 +69,18 @@ var _ = Describe("MinChecker", func() {
 	It("should return error code ERR_VALIDATOR_NOT_INT", func() {
 		err := New().Validate(&sampleMinInputTest6{Age: 11})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotIntegerValueError))
+		Expect(err).To(Equal(makeError("Age", NotIntegerValueError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_FLOAT", func() {
 		err := New().Validate(&sampleMinInputTest7{Age: 11})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotFloatValueError))
+		Expect(err).To(Equal(makeError("Age", NotFloatValueError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_MIN (float)", func() {
 		err := New().Validate(&sampleMinInputTest8{Age: 9.9})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(fmt.Sprintf(MinValueError, 10.1)))
+		Expect(err).To(Equal(makeError("Age", fmt.Sprintf(MinValueError, 10.1))))
 	})
 })

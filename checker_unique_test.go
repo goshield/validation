@@ -50,13 +50,13 @@ var _ = Describe("UniqueChecker", func() {
 	It("should return error code ERR_VALIDATOR_INVALID_ARGUMENT", func() {
 		err := getUniqueValidator().Validate(sampleUniqueInput1{"e@mail.com"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(InvalidArgumentError))
+		Expect(err).To(Equal(makeError("Email", InvalidArgumentError)))
 	})
 
 	It("should return error code ERR_VALIDATOR_NOT_UNIQUE", func() {
 		err := getUniqueValidator().Validate(sampleUniqueInput2{"e@mail.com"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotUniqueValueError))
+		Expect(err).To(Equal(makeError("Email", NotUniqueValueError)))
 	})
 
 	It("should return nil", func() {
@@ -67,12 +67,12 @@ var _ = Describe("UniqueChecker", func() {
 	It("should return error code ERR_VALIDATOR_NOT_UNIQUE", func() {
 		err := getUniqueValidator().Validate(sampleUniqueInput4{"e@mail.com"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(NotUniqueValueError))
+		Expect(err).To(Equal(makeError("Email", NotUniqueValueError)))
 	})
 
 	It("should return error code UnableToFetchResourceError", func() {
 		err := getUniqueValidator().Validate(sampleUniqueInput5{"e@mail.com"})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal(UnableToFetchResourceError))
+		Expect(err).To(Equal(makeError("Email", UnableToFetchResourceError)))
 	})
 })

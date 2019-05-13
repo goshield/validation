@@ -132,7 +132,7 @@ var _ = Describe("factoryValidator", func() {
 
 		err := v.Validate(sampleValidatorInput6{Z: "a", I: sampleValidatorInput5{1, "b"}})
 		Expect(err).NotTo(BeNil())
-		Expect(err.Error()).To(Equal("msg"))
+		Expect(err.Error()).To(Equal("X: msg"))
 	})
 
 	It("should allow to set custom error message", func() {
