@@ -7,6 +7,7 @@ import (
 	"regexp"
 )
 
+// Validator an interface of validator
 type Validator interface {
 	// Validate checks input value for error
 	Validate(v interface{}) error
@@ -15,6 +16,7 @@ type Validator interface {
 	Extend(checker Checker) Validator
 }
 
+// New returns a default Validator
 func New() Validator {
 	return NewWithTag("validate")
 }
@@ -40,11 +42,12 @@ func initializeCheckers(v Validator) Validator {
 		Extend(RegExpChecker()).
 		Extend(InChecker()).
 		Extend(EmptyChecker()).
-		Extend(LengthChecker())
+		Extend(LengthChecker()).
+		Extend(NilChecker())
 }
 
 func makeError(name string, err string) error {
-	return errors.New(fmt.Sprintf("%s: %s", name, err))
+	return fmt.Errorf("%s: %s", name, err)
 }
 
 type factoryValidator struct {
@@ -72,35 +75,48 @@ func (v *factoryValidator) Validate(input interface{}) error {
 
 	val, _ := v.valueOf(input)
 	for i := 0; i < n; i++ {
+		sf := t.Field(i)
 		vf := val.Field(i)
+
 		if vf.CanInterface() && (vf.Kind() == reflect.Struct || vf.Kind() == reflect.Ptr) {
+			if vf.Kind() == reflect.Ptr && vf.IsNil() {
+				return v.validate(sf, vf)
+			}
 			if err := v.Validate(vf.Interface()); err != nil {
 				return err
 			}
 		}
 
-		sf := t.Field(i)
-		if _, ok := sf.Tag.Lookup(v.tag); ok == false {
+		err := v.validate(sf, vf)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (v *factoryValidator) validate(sf reflect.StructField, vf reflect.Value) error {
+	if _, ok := sf.Tag.Lookup(v.tag); ok == false {
+		return nil
+	}
+
+	tag := sf.Tag.Get(v.tag)
+	if IsEmpty(tag) {
+		return nil
+	}
+
+	for k, p := range v.parseTags(tag) {
+		c, ok := v.checkers[k]
+		if ok == false {
 			continue
 		}
-
-		tag := sf.Tag.Get(v.tag)
-		if IsEmpty(tag) {
-			continue
-		}
-
-		for k, p := range v.parseTags(tag) {
-			c, ok := v.checkers[k]
-			if ok == false {
-				continue
+		if err := c.Check(vf.Interface(), p); err != nil {
+			errMsg := sf.Tag.Get(v.errorTag)
+			if !IsEmpty(errMsg) {
+				return errors.New(errMsg)
 			}
-			if err := c.Check(vf.Interface(), p); err != nil {
-				errMsg := sf.Tag.Get(v.errorTag)
-				if !IsEmpty(errMsg) {
-					return errors.New(errMsg)
-				}
-				return makeError(sf.Name, err.Error())
-			}
+			return makeError(sf.Name, err.Error())
 		}
 	}
 
@@ -115,7 +131,7 @@ func (v *factoryValidator) validateType(input interface{}) (reflect.Type, error)
 	case reflect.Struct:
 		return t, nil
 	default:
-		return nil, errors.New(fmt.Sprintf(InvalidTypeError, t.Kind().String()))
+		return nil, fmt.Errorf(InvalidTypeError, t.Kind().String())
 	}
 }
 
@@ -127,7 +143,7 @@ func (v *factoryValidator) valueOf(input interface{}) (reflect.Value, error) {
 	case reflect.Struct:
 		return reflect.ValueOf(input), nil
 	default:
-		return reflect.Value{}, errors.New(fmt.Sprintf(InvalidTypeError, t.Kind().String()))
+		return reflect.Value{}, fmt.Errorf(InvalidTypeError, t.Kind().String())
 	}
 }
 

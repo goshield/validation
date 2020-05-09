@@ -32,4 +32,5 @@ const (
 	UnableToFetchResourceError = "unable to fetch appropriate resource"
 	NotUniqueValueError        = "value already exists. It must be unique"
 	EmptyValueError            = "value must not be empty"
+	NilValueError              = "value must not be nil"
 )
