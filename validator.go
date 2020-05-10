@@ -78,18 +78,44 @@ func (v *factoryValidator) Validate(input interface{}) error {
 		sf := t.Field(i)
 		vf := val.Field(i)
 
-		if vf.CanInterface() && (vf.Kind() == reflect.Struct || vf.Kind() == reflect.Ptr) {
-			if vf.Kind() == reflect.Ptr && vf.IsNil() {
+		switch vf.Kind() {
+		case reflect.Map:
+			if vf.IsNil() {
+				return v.validate(sf, vf)
+			}
+			iter := vf.MapRange()
+			for iter.Next() {
+				err := v.Validate(iter.Value().Interface())
+				if err != nil {
+					return err
+				}
+			}
+		case reflect.Slice:
+			if vf.IsNil() {
+				return v.validate(sf, vf)
+			}
+			for i := 0; i < vf.Len(); i++ {
+				err := v.Validate(vf.Index(i).Interface())
+				if err != nil {
+					return err
+				}
+			}
+		case reflect.Struct:
+			if err := v.Validate(vf.Interface()); err != nil {
+				return err
+			}
+		case reflect.Ptr:
+			if vf.IsNil() {
 				return v.validate(sf, vf)
 			}
 			if err := v.Validate(vf.Interface()); err != nil {
 				return err
 			}
-		}
-
-		err := v.validate(sf, vf)
-		if err != nil {
-			return err
+		default:
+			err := v.validate(sf, vf)
+			if err != nil {
+				return err
+			}
 		}
 	}
 
@@ -120,6 +146,10 @@ func (v *factoryValidator) validate(sf reflect.StructField, vf reflect.Value) er
 		}
 	}
 
+	return nil
+}
+
+func (v *factoryValidator) validateMap() error {
 	return nil
 }
 

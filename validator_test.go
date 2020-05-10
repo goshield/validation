@@ -71,6 +71,18 @@ type sampleValidatorInput8 struct {
 	B sampleValidatorInput7
 }
 
+type sampleValidatorInput9 struct {
+	A map[string]*sampleValidatorInput11 `validate:"nil=false"`
+}
+
+type sampleValidatorInput10 struct {
+	A []*sampleValidatorInput11 `validate:"nil=false"`
+}
+
+type sampleValidatorInput11 struct {
+	B string `validate:"minLength=2"`
+}
+
 var _ = Describe("Validator", func() {
 	It("should return an instance of Validator", func() {
 		Expect(New()).NotTo(BeNil())
@@ -181,5 +193,41 @@ var _ = Describe("factoryValidator", func() {
 		})
 		Expect(err).NotTo(BeNil())
 		Expect(err.Error()).To(Equal("A must be lower than 3"))
+	})
+
+	It("should validate Map", func() {
+		v := New()
+		in := new(sampleValidatorInput9)
+		err := v.Validate(in)
+		Expect(err).NotTo(BeNil())
+		Expect(err).To(Equal(makeError("A", NilValueError)))
+
+		in.A = make(map[string]*sampleValidatorInput11)
+		in.A["11"] = &sampleValidatorInput11{B: "A"}
+		err = v.Validate(in)
+		Expect(err).NotTo(BeNil())
+		Expect(err).To(Equal(makeError("B", "minimum length is 2")))
+
+		in.A["11"] = &sampleValidatorInput11{B: "AAA"}
+		err = v.Validate(in)
+		Expect(err).To(BeNil())
+	})
+
+	It("should validate Slice", func() {
+		v := New()
+		in := new(sampleValidatorInput10)
+		err := v.Validate(in)
+		Expect(err).NotTo(BeNil())
+		Expect(err).To(Equal(makeError("A", NilValueError)))
+
+		in.A = make([]*sampleValidatorInput11, 1)
+		in.A[0] = &sampleValidatorInput11{B: "A"}
+		err = v.Validate(in)
+		Expect(err).NotTo(BeNil())
+		Expect(err).To(Equal(makeError("B", "minimum length is 2")))
+
+		in.A[0] = &sampleValidatorInput11{B: "AAA"}
+		err = v.Validate(in)
+		Expect(err).To(BeNil())
 	})
 })
