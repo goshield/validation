@@ -85,7 +85,13 @@ func (v *factoryValidator) Validate(input interface{}) error {
 			}
 			iter := vf.MapRange()
 			for iter.Next() {
-				err := v.Validate(iter.Value().Interface())
+				in := iter.Value().Interface()
+				_, err := v.validateType(in)
+				if err != nil {
+					// value is not supported
+					continue
+				}
+				err = v.Validate(in)
 				if err != nil {
 					return err
 				}
@@ -95,7 +101,13 @@ func (v *factoryValidator) Validate(input interface{}) error {
 				return v.validate(sf, vf)
 			}
 			for i := 0; i < vf.Len(); i++ {
-				err := v.Validate(vf.Index(i).Interface())
+				in := vf.Index(i).Interface()
+				_, err := v.validateType(in)
+				if err != nil {
+					// value is not supported
+					continue
+				}
+				err = v.Validate(in)
 				if err != nil {
 					return err
 				}
